@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Luzain Dashboard Trading</title>
+<style>
+:root{--bg:#f3f5fb;--card:#fff;--ink:#2d3350;--mut:#8a90ad;--line:#e6e9f4;--g:#4fb99a;--gb:#e3f6ef;--r:#e97b8f;--rb:#fde8ec;--y:#e6b44c;--yb:#fff3d6;--b:#7b8cde;--bb:#e8ebfb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#171a28;--card:#20243a;--ink:#e6e9f7;--mut:#8f95b5;--line:#2c3150;--g:#7fd8bb;--gb:#223a38;--r:#f2a0b0;--rb:#3b2631;--y:#efca7a;--yb:#3a3322;--b:#a1aef0;--bb:#2a2f52}}
+:root[data-theme=dark]{--bg:#171a28;--card:#20243a;--ink:#e6e9f7;--mut:#8f95b5;--line:#2c3150;--g:#7fd8bb;--gb:#223a38;--r:#f2a0b0;--rb:#3b2631;--y:#efca7a;--yb:#3a3322;--b:#a1aef0;--bb:#2a2f52}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:1200px;margin:0 auto;padding:20px 16px 40px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+h1{font-size:20px;margin:0}h1 small{display:block;font-size:12px;color:var(--mut);font-weight:400}
+.nav{display:flex;gap:6px;flex-wrap:wrap}
+button,input{font:inherit;color:inherit}
+button{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:7px 13px;cursor:pointer}
+button.on{background:var(--bb);border-color:var(--b);color:var(--b);font-weight:600}
+.params{display:flex;flex-wrap:wrap;gap:8px;align-items:end;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:16px}
+.params label{font-size:11px;color:var(--mut);display:flex;flex-direction:column;gap:2px}
+.params input[type=number]{width:70px;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:5px 7px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.k{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.k span{font-size:11px;letter-spacing:.04em;color:var(--mut);text-transform:uppercase}
+.k b{display:block;font-size:24px;margin-top:4px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.k i{font-style:normal;font-size:11px;color:var(--mut)}
+.pos{color:var(--g)}.neg{color:var(--r)}.warn{color:var(--y)}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:18px}
+h2{font-size:16px;margin:0 0 4px}p.d{margin:0 0 12px;color:var(--mut);font-size:12px}
+.tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:640px}
+th{font-size:11px;text-transform:uppercase;color:var(--mut);text-align:left;padding:8px;border-bottom:1px solid var(--line)}
+td{padding:9px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+tr:last-child td{border:0}
+.t{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600}
+.tg{background:var(--gb);color:var(--g)}.tr{background:var(--rb);color:var(--r)}.ty{background:var(--yb);color:var(--y)}.tb{background:var(--bb);color:var(--b)}
+.em{color:var(--mut);text-align:center;padding:18px}
+.pn{display:none}.pn.on{display:block}
+svg{width:100%;height:220px;display:block}
+.bar{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 12px;margin-bottom:16px;overflow:hidden}
+.bar .t{flex:none;white-space:nowrap}.tp{overflow:hidden;flex:1;min-width:0}
+.mq{display:flex;width:max-content;animation:mq 140s linear infinite}.tp:hover .mq{animation-play-state:paused}
+.ti{white-space:nowrap;padding:0 18px;border-right:1px solid var(--line);font-variant-numeric:tabular-nums}.ti em{font-style:normal;font-weight:600}
+@keyframes mq{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.mq{animation:none}.tp{overflow-x:auto}}
+footer{color:var(--mut);font-size:11px;text-align:center}
+</style>
+</head>
+<body>
+<div class="w">
+<header>
+ <h1>Luzain Dashboard Trading<small id="st">memuat…</small></h1>
+ <div class="nav" id="nav"><button class="on" data-p="a">Dashboard</button><button data-p="b">Sinyal &amp; Posisi</button><button data-p="c">Historical Trade</button><button data-p="d">Peta Performa</button><button data-p="e">Equity Curve</button></div>
+</header>
+
+<div class="bar"><div class="tp" id="tp"></div><span id="mk" class="t ty">● Pasar</span></div>
+
+<div class="params">
+ <label>Fast EMA<input type="number" id="pf" value="9"></label>
+ <label>Slow EMA<input type="number" id="ps" value="21"></label>
+ <label>Trend EMA<input type="number" id="pt" value="50"></label>
+ <label>ATR Period<input type="number" id="pa" value="14"></label>
+ <label>ATR Mult<input type="number" id="pm" value="3" step="0.5"></label>
+ <button id="rc">Hitung Ulang</button>
+ <button id="yf">Harga Yahoo</button><button id="dm">Data Dummy</button>
+ <button id="up">Upload JSON (Yahoo)</button><input type="file" id="fi" accept=".json" hidden>
+</div>
+
+<div class="pn on" id="a">
+ <div class="grid" id="kp"></div>
+ <section><h2>Equity Curve</h2><p class="d">Agregat semua trade tertutup, compounded.</p><div id="eq"></div></section>
+ <section><h2>Pantau — Kandidat Sinyal Beli</h2><p class="d">Belum berposisi, harga di atas Trend EMA, Fast EMA mendekati Slow EMA dari bawah. Harga pemicu = estimasi penutupan besok yang membuat golden cross (dibulatkan ke fraksi harga BEI). Bukan nasihat investasi.</p><div class="tw" id="pt_"></div></section>
+ <section><h2>Sinyal Beli — Bisa Dibeli</h2><p class="d">Sinyal BUY (EMA cross + di atas Trend EMA) yang posisinya masih valid. Bar terakhir: <b id="lb"></b></p>
+  <div class="tabs" id="rg"><button data-d="0">Hari Ini</button><button data-d="3">3 Hari</button><button class="on" data-d="7">7 Hari</button><button data-d="30">30 Hari</button></div>
+  <div class="tw" id="sg"></div></section>
+</div>
+
+<div class="pn" id="b">
+ <section><h2>Posisi Aktif</h2><p class="d">Posisi terbuka beserta trailing stop ATR.</p><div class="tw" id="ps_"></div></section>
+</div>
+
+<div class="pn" id="c">
+ <section><h2>Historical Trade</h2><p class="d">150 trade tertutup terbaru.</p><div class="tw" id="ht"></div></section>
+</div>
+<div class="pn" id="d">
+ <h2 style="font-size:18px">Peta Performa / Annual Returns</h2><p class="d">Profit realized per tahun dan per saham dari backtest. Posisi yang masih terbuka tidak dihitung.</p>
+ <div class="grid" id="ak"></div>
+ <section><h2>Annual Returns</h2><p class="d">% terhadap modal awal Rp 100 juta</p><div id="ab"></div></section>
+ <section><h2>Performa per Saham</h2><p class="d">Diurutkan dari total PnL tertinggi.</p><div class="tw" id="at"></div></section>
+</div>
+<div class="pn" id="e">
+ <h2 style="font-size:18px">Equity Curve</h2><p class="d">Kurva ekuitas realized dari backtest (modal awal Rp 100 juta, 10 slot, tiap trade 10% ekuitas).</p>
+ <div class="grid" id="ek"></div>
+ <section><h2>Equity Curve</h2><p class="d">Ekuitas realized (IDR)</p><div id="eq2"></div></section>
+</div>
+<footer>Sumber harga: Yahoo Finance (.JK), diperbarui otomatis • Konstituen KOMPAS100 periode 3 Agu 2026 – 29 Jan 2027 • Bukan nasihat investasi.</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const TK='AADI ACES ADMR ADRO AKRA AMMN AMRT ANTM ARCI ARTO ASII BBCA BBNI BBRI BBTN BBYB BFIN BIPI BKSL BMRI BNBR BRIS BRMS BRPT BSDE BUKA BULL BUMI BUVA CBDK CMRY COIN CPIN CTRA CUAN DEWA DSNG ELSA EMAS EMTK ENRG ERAA ESSA EXCL GGRM GOTO HEAL HRTA HRUM ICBP IMPC INCO INDF INDY INET INKP ISAT ITMG JPFA JSMR KIJA KLBF KPIG LSIP MAPA MAPI MBMA MDKA MEDC MIKA MINA MYOR NCKL PANI PGAS PGEO PNLF PSAB PTBA PTRO PWON RAJA RATU RMKE SCMA SGER SMGR SMIL SMRA SSIA TAPG TINS TLKM TOBA TOWR TPIA UNTR UNVR WIFI WIRG'.split(' ').map(s=>s+'.JK');
+let DATA={},R=null,RANGE=7,SRC='Data dummy';const SL=.1;
+function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function tick(p){return p<200?1:p<500?2:p<2000?5:p<5000?10:25}
+function rd(p,m){const t=tick(p);return Math[m||'round'](p/t)*t}
+function dummy(){
+ const out={};const end=new Date('2026-10-23');
+ TK.forEach((s,k)=>{const r=rng(k*977+13);let p=300+r()*8000,ph=r()*6,per=35+r()*40;const arr=[];
+  for(let i=0;i<650;i++){const mu=.0018*Math.sin(i/per+ph),ret=mu+(r()-.5)*.045;const o=p;p=Math.max(50,p*(1+ret));
+   arr.push({o,h:Math.max(o,p)*(1+r()*.01),l:Math.min(o,p)*(1-r()*.01),c:p})}
+  let d=new Date(end),i=arr.length-1;while(i>=0){if(d.getDay()%6){arr[i].date=d.toISOString().slice(0,10);i--}d.setDate(d.getDate()-1)}
+  arr.forEach(b=>{['o','h','l','c'].forEach(x=>b[x]=rd(b[x]))});out[s]=arr});
+ return out}
+function ema(a,n){const k=2/(n+1);const o=[a[0]];for(let i=1;i<a.length;i++)o.push(a[i]*k+o[i-1]*(1-k));return o}
+function atr(b,n){const o=[b[0].h-b[0].l];for(let i=1;i<b.length;i++){const tr=Math.max(b[i].h-b[i].l,Math.abs(b[i].h-b[i-1].c),Math.abs(b[i].l-b[i-1].c));o.push((o[i-1]*(n-1)+tr)/n)}return o}
+function calc(){
+ const F=+$('pf').value,S=+$('ps').value,T=+$('pt').value,A=+$('pa').value,M=+$('pm').value;
+ const trades=[],open=[],watch=[],sigs=[];let last='';
+ for(const s in DATA){const b=DATA[s],c=b.map(x=>x.c),f=ema(c,F),sl=ema(c,S),t=ema(c,T),at=atr(b,A);const n=b.length-1;last=b[n].date;
+  let pos=null;
+  for(let i=Math.max(T,S)+1;i<=n;i++){
+   const up=f[i-1]<=sl[i-1]&&f[i]>sl[i],dn=f[i-1]>=sl[i-1]&&f[i]<sl[i];
+   if(!pos){if(up&&c[i]>t[i]){pos={s,i,d:b[i].date,p:c[i],stop:rd(c[i]-M*at[i],'floor')};sigs.push({s,d:b[i].date,i,p:c[i]})}}
+   else{pos.stop=Math.max(pos.stop,rd(c[i]-M*at[i],'floor'));
+    if(c[i]<pos.stop||dn){const xp=c[i];trades.push({s,ed:pos.d,xd:b[i].date,ep:pos.p,xp,bars:i-pos.i,pnl:(xp/pos.p-1)*100,why:c[i]<pos.stop?'Stop':'Sell'});pos=null}}}
+  if(pos){const lastSig=sigs[sigs.length-1];open.push({...pos,now:c[n],bars:n-pos.i,fl:(c[n]/pos.p-1)*100,ago:n-pos.i})}
+  else if(c[n]>t[n]&&f[n]<sl[n]){const gap=(sl[n]-f[n])/sl[n]*100;
+   if(gap<1.2&&f[n]>f[n-1]){const af=2/(F+1),as=2/(S+1);let P=(sl[n]-f[n]+af*f[n]-as*sl[n])/(af-as);P=rd(P,'ceil');
+    watch.push({s,now:c[n],trig:P,dist:(P/c[n]-1)*100,gap,mom:(f[n]-f[n-1])/f[n-1]*100,hot:gap<.5})}}}
+ trades.sort((a,b)=>a.xd<b.xd?-1:1);
+ const w=trades.filter(x=>x.pnl>0),l=trades.filter(x=>x.pnl<=0),sum=a=>a.reduce((x,y)=>x+y.pnl,0),avg=(a,k)=>a.length?a.reduce((x,y)=>x+y[k],0)/a.length:0;
+ let eq=1,pk=1,dd=0;const curve=[1],cd=[trades.length?trades[0].ed:''],yr={},ps={};trades.forEach(x=>{const e0=eq;eq*=1+x.pnl/100*SL;curve.push(eq);cd.push(x.xd);const y=x.xd.slice(0,4);yr[y]=(yr[y]||0)+eq-e0;const p=ps[x.s]=ps[x.s]||{n:0,w:0,t:0};p.n++;p.w+=x.pnl>0;p.t+=x.pnl;pk=Math.max(pk,eq);dd=Math.min(dd,(eq/pk-1)*100)});
+ const gl=Math.abs(sum(l));
+ R={trades,open,watch,sigs,last,curve,cd,yr,ps,pk,m:{net:(eq-1)*100,avg:trades.length?sum(trades)/trades.length:0,pf:gl?sum(w)/gl:Infinity,aw:avg(w,'pnl'),al:avg(l,'pnl'),wr:trades.length?w.length/trades.length*100:0,dd,bw:avg(w,'bars'),bl:avg(l,'bars'),n:trades.length}}}
+const f2=(x,d=2)=>isFinite(x)?x.toFixed(d):'∞',pc=x=>(x>0?'+':'')+f2(x)+'%',cl=x=>x>0?'pos':x<0?'neg':'',rp=x=>'Rp'+Math.round(x).toLocaleString('id-ID');
+const tbl=(h,rows)=>rows.length?'<table><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr>'+rows.join('')+'</table>':'<div class="em">Tidak ada data.</div>';
+function render(){
+ const m=R.m;
+ const K=[['Net Profit',pc(m.net),cl(m.net),m.n+' trade tertutup'],['AVG PnL',pc(m.avg),cl(m.avg),'Per trade'],['Profit Factor',f2(m.pf),'warn','Gross win / gross loss'],['AVG Win',pc(m.aw),'pos','Per trade menang'],['AVG Loss',pc(m.al),'neg','Per trade rugi'],['Winning Rate',f2(m.wr,1)+'%','','Win / total trade'],['Max Drawdown',f2(m.dd)+'%','neg','Equity, 10 slot @10%'],['AVG Win Bar Held',f2(m.bw,1),'pos','Hari bursa'],['AVG Loss Bar Held',f2(m.bl,1),'neg','Hari bursa'],['Posisi Aktif',R.open.length,'','Saat ini'],['Sinyal 7 Hari',R.sigs.filter(x=>inR(x,7)).length,'','BUY terbaru'],['Pantau',R.watch.length,'warn','Mendekati sinyal']];
+ $('kp').innerHTML=K.map(k=>`<div class="k"><span>${k[0]}</span><b class="${k[2]}">${k[1]}</b><i>${k[3]}</i></div>`).join('');
+ $('st').textContent='Bar terakhir '+R.last+' • '+Object.keys(DATA).length+' saham • '+SRC;$('lb').textContent=R.last;tape();extra();
+ // equity
+ const c=R.curve,mn=Math.min(...c),mx=Math.max(...c),W=800,H=220,pt=c.map((v,i)=>[i/(c.length-1||1)*W,H-10-(v-mn)/((mx-mn)||1)*(H-20)]);
+ $('eq').innerHTML=c.length>1?`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path d="M0,${H} ${pt.map(p=>'L'+p.join(',')).join(' ')} L${W},${H}Z" fill="var(--gb)"/><path d="${pt.map((p,i)=>(i?'L':'M')+p.join(',')).join(' ')}" fill="none" stroke="var(--g)" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>`:'<div class="em">Belum ada trade.</div>';
+ $('pt_').innerHTML=tbl(['Saham','Harga Sekarang','Harga Pemicu Beli','Jarak ke Target','Gap EMA','Prioritas'],R.watch.sort((a,b)=>a.gap-b.gap).map(w=>`<tr><td><b>${w.s.replace('.JK','')}</b></td><td>${rp(w.now)}</td><td>${rp(w.trig)}</td><td class="${w.dist<=0?'pos':'warn'}">${pc(w.dist)}</td><td>${f2(w.gap)}%</td><td><span class="t ${w.hot?'ty':'tb'}">${w.hot?'Sangat Dekat':'Pantau'}</span></td></tr>`));
+ sg();
+ $('ps_').innerHTML=tbl(['Saham','Tgl Beli','Harga Beli','Harga Sekarang','Floating %','Trailing Stop','Jarak Stop','Bar'],R.open.sort((a,b)=>a.ago-b.ago).map(o=>`<tr><td><b>${o.s.replace('.JK','')}</b></td><td>${o.d}</td><td>${rp(o.p)}</td><td>${rp(o.now)}</td><td class="${cl(o.fl)}">${pc(o.fl)}</td><td>${rp(o.stop)}</td><td>${f2((o.stop/o.now-1)*100)}%</td><td>${o.bars}</td></tr>`));
+ $('ht').innerHTML=tbl(['Saham','Entry','Exit','Harga Entry','Harga Exit','Bar Held','PnL %','Hasil','Exit'],R.trades.slice(-150).reverse().map(t=>`<tr><td><b>${t.s.replace('.JK','')}</b></td><td>${t.ed}</td><td>${t.xd}</td><td>${rp(t.ep)}</td><td>${rp(t.xp)}</td><td>${t.bars}</td><td class="${cl(t.pnl)}">${pc(t.pnl)}</td><td><span class="t ${t.pnl>0?'tg':'tr'}">${t.pnl>0?'WIN':'LOSS'}</span></td><td>${t.why}</td></tr>`));
+}
+function tape(){
+ const it=Object.keys(DATA).map(s=>{const b=DATA[s],n=b.length-1,ch=(b[n].c/b[n-1].c-1)*100;return `<span class="ti"><b>${s.replace('.JK','')}</b> ${Math.round(b[n].c).toLocaleString('id-ID')} <em class="${ch>=0?'pos':'neg'}">${ch>=0?'▲':'▼'} ${f2(Math.abs(ch)).replace('.',',')}%</em></span>`}).join('');
+ $('tp').innerHTML='<div class="mq">'+it+it+'</div>';
+ const w=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Jakarta'})),h=w.getHours()+w.getMinutes()/60,op=w.getDay()%6&&h>=9&&h<16;
+ $('mk').className='t '+(op?'tg':'ty');$('mk').textContent=op?'● Pasar buka':'● Pasar tutup'}
+function extra(){
+ const CAP=1e8,L=R.curve[R.curve.length-1],ys=Object.keys(R.yr).sort(),bb=DATA[Object.keys(DATA)[0]],yrs=Math.max(.25,(Date.parse(R.last)-Date.parse(bb[0].date))/31557600000),
+ id=x=>'Rp '+Math.round(x).toLocaleString('id-ID'),jt=x=>'Rp '+(x/1e6).toFixed(1).replace('.',',')+' jt',
+ card=(a,b,c,d)=>`<div class="k"><span>${a}</span><b class="${c}">${b}</b><i>${d}</i></div>`,ann=(Math.pow(Math.max(L,1e-9),1/yrs)-1)*100;
+ $('ek').innerHTML=card('Ekuitas Akhir',id(CAP*L),cl(L-1),'Modal awal Rp 100.000.000')+card('Puncak Ekuitas',id(CAP*R.pk),'','Level tertinggi realized')+card('Max Drawdown',f2(R.m.dd)+'%','neg','Dari puncak ekuitas')+card('Total Return',pc(R.m.net),cl(R.m.net),'Annualized '+pc(ann));
+ if(R.curve.length>1){
+  const W=800,H=300,l=56,bt=26,t0=Date.parse(R.cd[0]),t1=Date.parse(R.cd[R.cd.length-1]),vs=R.curve.map(v=>v*CAP),mn=Math.min(...vs),mx=Math.max(...vs),sp=(mx-mn)||1,X=t=>l+(t-t0)/((t1-t0)||1)*(W-l-8),Y=v=>H-bt-(v-mn)/sp*(H-bt-10);
+  const pts=R.cd.map((d,i)=>X(Date.parse(d))+','+Y(vs[i])),y0=new Date(t0).getFullYear(),y1=new Date(t1).getFullYear();
+  let g='';for(let i=0;i<5;i++){const v=mn+sp*i/4;g+=`<line x1="${l}" x2="${W}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${l-6}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="var(--mut)">${Math.round(v/1e6)} jt</text>`}
+  g+=`<text x="${l}" y="${H-6}" font-size="11" fill="var(--mut)">${y0}</text>`;for(let y=y0+1;y<=y1;y++)g+=`<text x="${X(Date.parse(y+'-01-01'))}" y="${H-6}" font-size="11" fill="var(--mut)" text-anchor="middle">${y}</text>`;
+  $('eq2').innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="height:auto">${g}<path d="M${X(t0)},${H-bt} L${pts.join(' L')} L${X(t1)},${H-bt}Z" fill="var(--gb)" opacity=".7"/><path d="M${pts.join(' L')}" fill="none" stroke="var(--g)" stroke-width="2"/></svg>`}
+ else $('eq2').innerHTML='<div class="em">Belum ada trade.</div>';
+ const pcs=ys.map(y=>R.yr[y]*100),bi=pcs.indexOf(Math.max(...pcs)),wi=pcs.indexOf(Math.min(...pcs)),tot=(L-1)*CAP,ly=R.last.slice(0,4),nm=y=>y+(y===ly?' (YTD)':'');
+ $('ak').innerHTML=card('Total Profit',(tot>=0?'+':'')+jt(tot),cl(tot),pc(R.m.net)+' atas modal')+card('Rata-rata per Tahun',ys.length?(tot>=0?'+':'')+jt(tot/ys.length):'-',cl(tot),ys.length?pc(R.m.net/ys.length)+' per tahun':'')+card('Tahun Terbaik',ys.length?nm(ys[bi]):'-','pos',ys.length?pc(pcs[bi]):'')+card('Tahun Terburuk',ys.length?nm(ys[wi]):'-','neg',ys.length?pc(pcs[wi]):'');
+ if(ys.length){const W=800,H=260,tp=30,h=H-tp-30,mx=Math.max(0,...pcs),mn=Math.min(0,...pcs),Y=p=>tp+(mx-p)/((mx-mn)||1)*h,n=ys.length,bw=W/n;
+  $('ab').innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="height:auto"><line x1="0" x2="${W}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--mut)"/>`+pcs.map((p,i)=>{const x=i*bw+bw*.3,a=Y(Math.max(p,0)),hh=Math.max(Math.abs(Y(p)-Y(0)),2);return `<rect x="${x}" y="${a}" width="${bw*.4}" height="${hh}" rx="6" fill="${p>=0?'var(--g)':'var(--r)'}" opacity=".8"/><text x="${x+bw*.2}" y="${p>=0?a-6:a+hh+14}" text-anchor="middle" font-size="12" fill="var(--ink)">${pc(p)}</text><text x="${x+bw*.2}" y="${H-8}" text-anchor="middle" font-size="12" fill="var(--mut)">${nm(ys[i])}</text>`}).join('')+'</svg>'}
+ else $('ab').innerHTML='<div class="em">Belum ada trade.</div>';
+ $('at').innerHTML=tbl(['Saham','Trade','Winrate','Avg PnL','Total PnL'],Object.entries(R.ps).sort((a,b)=>b[1].t-a[1].t).map(([s,p])=>`<tr><td><b>${s.replace('.JK','')}</b></td><td>${p.n}</td><td>${f2(p.w/p.n*100,1)}%</td><td class="${cl(p.t/p.n)}">${pc(p.t/p.n)}</td><td class="${cl(p.t)}">${pc(p.t)}</td></tr>`))}
+function inR(x,d){const n=DATA[x.s||Object.keys(DATA)[0]].length-1;return n-x.i<=d}
+function sg(){
+ const rows=R.sigs.filter(x=>inR(x,RANGE)).map(x=>{const o=R.open.find(y=>y.s===x.s&&y.d===x.d);return o?{x,o}:null}).filter(Boolean).sort((a,b)=>a.o.ago-b.o.ago);
+ $('sg').innerHTML=tbl(['Saham','Tgl Sinyal','Harga Beli','Harga Sekarang','Untung / Rugi','Status','Trailing Stop','Jarak ke Stop'],rows.map(({o})=>`<tr><td><b>${o.s.replace('.JK','')}</b></td><td>${o.d}</td><td>${rp(o.p)}</td><td>${rp(o.now)}</td><td class="${cl(o.fl)}">${pc(o.fl)}</td><td><span class="t tg">BUY • Valid</span></td><td>${rp(o.stop)}</td><td>${f2((o.stop/o.now-1)*100)}%</td></tr>`));
+}
+function go(){calc();render()}
+$('nav').onclick=e=>{const p=e.target.dataset.p;if(!p)return;[...$('nav').children].forEach(b=>b.classList.toggle('on',b===e.target));document.querySelectorAll('.pn').forEach(x=>x.classList.toggle('on',x.id===p))};
+$('rg').onclick=e=>{if(!e.target.dataset.d)return;RANGE=+e.target.dataset.d;[...$('rg').children].forEach(b=>b.classList.toggle('on',b===e.target));sg()};
+$('rc').onclick=go;$('dm').onclick=()=>{DATA=dummy();SRC='Data dummy';go()};$('yf').onclick=()=>loadLive();
+$('up').onclick=()=>$('fi').click();
+$('fi').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result),d={};for(const s in j){const a=j[s].filter(x=>x.close>0).map(x=>({date:x.date,o:x.open,h:x.high,l:x.low,c:rd(x.close)}));if(a.length>80)d[s]=a}if(!Object.keys(d).length)throw 0;DATA=d;SRC='Upload JSON';go()}catch(_){alert('Format JSON tidak valid.')}};r.readAsText(f)};
+async function loadLive(){
+ $('st').textContent='mengambil data Yahoo Finance…';
+ try{const r=await fetch('/api/prices');if(!r.ok)throw 0;const j=await r.json(),d={};
+  for(const s in j.data){const x=j.data[s],a=[];for(let i=0;i<x.t.length;i++)a.push({date:new Date(x.t[i]*86400000).toISOString().slice(0,10),o:x.o[i],h:x.h[i],l:x.l[i],c:x.c[i]});if(a.length>80)d[s]=a}
+  if(!Object.keys(d).length)throw 0;DATA=d;SRC='Yahoo Finance • update '+new Date(j.updated).toLocaleString('id-ID',{timeZone:'Asia/Jakarta',hour12:false})+' WIB';go()}
+ catch(e){DATA=dummy();SRC='DATA DUMMY (API Yahoo belum tersedia)';go()}}
+loadLive();setInterval(()=>{if(!document.hidden&&SRC.startsWith('Yahoo'))loadLive()},900000);
+</script>
+</body>
+</html>
